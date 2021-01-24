@@ -10,4 +10,5 @@ public class GreaterBean {
     public void greet(String username) {
         log.info("Hello {}", username);
     }
+
 }

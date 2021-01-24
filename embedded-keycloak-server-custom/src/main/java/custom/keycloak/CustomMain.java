@@ -10,4 +10,5 @@ public class CustomMain {
     public static void main(String[] args) {
         SpringApplication.run(CustomMain.class, args);
     }
+
 }

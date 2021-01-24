@@ -1,3 +1,12 @@
+=============
+Find all keycloak endpoitns: curl http://localhost:10001/auth/realms/development/.well-known/openid-configuration
+
+"http://localhost:8080/auth/realms/master/protocol/openid-connect/auth",
+
+
+
+
+
 Example for Embedded Keycloak Server Customizations
 ---
 

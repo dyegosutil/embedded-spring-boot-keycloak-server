@@ -1,3 +1,33 @@
+Ho to start the server, configure it and get the token:
+
+- Run the spring boot app inside embedded-kaycloak-server-plain
+- Go to localhost:8080/auth/admin/master/console/#/realms/master 
+- login with admin admin
+- add the user spicy
+- add the credentials(password) spicy to it
+- IMPORTANT: sign out from admin
+- open the following url to get the authorization code:  http://localhost:8080/auth/realms/master/protocol/openid-connect/auth?client_id=account&response_type=code&state=fj8o3n7bdy1op5&redirect_url=http://localhost:8080/
+- enter user and password 'spicy'
+- you will receive a response like: http://localhost:8080/?state=fj8o3n7bdy1op5&session_state=f8513fa0-a6a2-40eb-8e7e-5963ae5a1f44&code=8c0397f0-9973-419d-9d0f-9ebcb41e1de8.f8513fa0-a6a2-40eb-8e7e-5963ae5a1f44.bf6a11e2-bd5a-4dd6-9017-e381d7b630a1
+- copy the authorization code part '8c0397f0-9973-419d-9d0f-9ebcb41e1de8.f8513fa0-a6a2-40eb-8e7e-5963ae5a1f44.bf6a11e2-bd5a-4dd6-9017-e381d7b630a1'
+- and past in the correspondent place in : 
+
+curl --location --request POST 'http://localhost:8080/auth/realms/master/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=authorization_code' \
+--data-urlencode 'client_id=account' \
+--data-urlencode 'client_secret=c7d6ce05-8cd5-4343-9979-da679f70e962' \
+--data-urlencode 'code=8c0397f0-9973-419d-9d0f-9ebcb41e1de8.f8513fa0-a6a2-40eb-8e7e-5963ae5a1f44.bf6a11e2-bd5a-4dd6-9017-e381d7b630a1' \
+--data-urlencode 'redirect_uri=http://localhost:8080/'
+
+- execute the curl and you will receive the token as:
+
+{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJERXFRZENGYmloeEFHTHhUTDNDWVZLX0luVGV0aHJiOWtvY1dKb2dlUmRNIn0.eyJleHAiOjE2MTE1MTUwNDUsImlhdCI6MTYxMTUxNDk4NSwiYXV0aF90aW1lIjoxNjExNTE0OTU3LCJqdGkiOiJiYzA2OGJjMC03MjIwLTQ4NGMtYTBmNi01NGY0ZjZjMWI3YTYiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvYXV0aC9yZWFsbXMvbWFzdGVyIiwic3ViIjoiYjkwZDBlNDAtMzMwNi00Y2M4LTk5ZDktZTllMzk2MTQyMDRmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYWNjb3VudCIsInNlc3Npb25fc3RhdGUiOiJmODUxM2ZhMC1hNmEyLTQwZWItOGU3ZS01OTYzYWU1YTFmNDQiLCJhY3IiOiIxIiwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3BpY3kifQ.O0DzBRW0JAC_xdypi1LDttOJFRUTCkpwHWuDQT-4rcsW8uZz0u0mwI1AevuWitNwgDdpon27eaRn5RSN_XeQV8eNQyrWChayOqMK0wjcme0O8JfhjmLEY6YnRuEJGuvneE515nco9dBKGezLpTBk5dvnPzX2viK-VrfvkGi-FGZXbmLq6M-QRcgC6HUPAjAxU5uDnssG0RJcWhGNX0Qa0vrMn0a9KK5TEvkeoLDU5TyMAfLCfJdecXm3nswn8sGinViOldmuUW2ptCwb4F75cejo03f1g8RwLVVQwcli_lHTAJU1GdO6LFzaBikLxvF1Yj62bkajaGcpnXpKR0kDGg","expires_in":60,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YmQ1ZmM4OS04NDJkLTQ4YzEtOThkZi02YTAxOGIyZTUxYjEifQ.eyJleHAiOjE2MTE1MTY3ODUsImlhdCI6MTYxMTUxNDk4NSwianRpIjoiM2EyYzJjMmYtYzZkNi00OGVkLWFiNTctM2QyNTRhZDZjNTM1IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21hc3RlciIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9hdXRoL3JlYWxtcy9tYXN0ZXIiLCJzdWIiOiJiOTBkMGU0MC0zMzA2LTRjYzgtOTlkOS1lOWUzOTYxNDIwNGYiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiYWNjb3VudCIsInNlc3Npb25fc3RhdGUiOiJmODUxM2ZhMC1hNmEyLTQwZWItOGU3ZS01OTYzYWU1YTFmNDQiLCJzY29wZSI6InByb2ZpbGUgZW1haWwifQ.RZrYNs0-0YfvcaJ5m1ri3WCKkdP1YVbIV1IF5Rk4kzc","token_type":"bearer","not-before-policy":0,"session_state":"f8513fa0-a6a2-40eb-8e7e-5963ae5a1f44","scope":"profile email"}
+
+the end
+
+
+
 Embedded Keycloak Server running in a Spring Boot App 
 =====================================================
 
